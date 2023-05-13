@@ -28,5 +28,27 @@ public class SecurityConfig {
       return new InMemoryUserDetailsManager(userList);
    }
 
+   @Bean
+   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+      return http
+              .authorizeRequests()  //whenever we run our security we need to authorize which page
+              .antMatchers("/user/**").hasRole("ADMIN")
+              .antMatchers("/project/**").hasRole("MANAGER")
+              .antMatchers("/task/employee/**").hasRole("EMPLOYEE")
+              .antMatchers("/task/**").hasRole("MANAGER")
+              .antMatchers(
+                      "/",
+                      "/login",
+                      "/fragments/**",
+                      "/assets/**",
+                      "/images/**"   //** meaning everything
+              ).permitAll()   //make it avaible for everyone
+              .anyRequest().authenticated()  //antMaathchers disindakiler icin
+              .and()
+              .httpBasic() //spring give us one pop-up box
+              .and().build();
+
+   }
+
    }
 

@@ -18,15 +18,15 @@ import java.util.List;
 
 @Configuration
 public class SecurityConfig {
-
-   @Bean
-   public UserDetailsService userDetailsService(PasswordEncoder encoder) {
-
-      List<UserDetails> userList = new ArrayList<>();
-      userList.add(new User("mike", encoder.encode("password"), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"))));
-      userList.add(new User("ozzy", encoder.encode("password"), Arrays.asList(new SimpleGrantedAuthority("ROLE_MANAGER"))));
-      return new InMemoryUserDetailsManager(userList);
-   }
+//HARD CODE WE NEED TO MODIFICATION
+//   @Bean
+//   public UserDetailsService userDetailsService(PasswordEncoder encoder) {
+//
+//      List<UserDetails> userList = new ArrayList<>();
+//      userList.add(new User("mike", encoder.encode("password"), Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"))));
+//      userList.add(new User("ozzy", encoder.encode("password"), Arrays.asList(new SimpleGrantedAuthority("ROLE_MANAGER"))));
+//      return new InMemoryUserDetailsManager(userList);
+//   }
 
    @Bean
    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -36,6 +36,8 @@ public class SecurityConfig {
               .antMatchers("/project/**").hasRole("MANAGER")
               .antMatchers("/task/employee/**").hasRole("EMPLOYEE")
               .antMatchers("/task/**").hasRole("MANAGER")
+              //.antMatchers("/task/**").hasAnyRole("EMPLOYEE","ADMIN")
+              //.antMatchers("/task/**").hasAuthority("ROLE_EMPLOYEE")
               .antMatchers(
                       "/",
                       "/login",
@@ -45,7 +47,12 @@ public class SecurityConfig {
               ).permitAll()   //make it avaible for everyone
               .anyRequest().authenticated()  //antMaathchers disindakiler icin
               .and()
-              .httpBasic() //spring give us one pop-up box
+         //     .httpBasic() //spring give us one pop-up box
+              .formLogin()
+                 .loginPage("/login")
+                 .defaultSuccessUrl("/wecome")
+                 .failureUrl("/login?error=true")
+                 .permitAll()  //access everyone
               .and().build();
 
    }

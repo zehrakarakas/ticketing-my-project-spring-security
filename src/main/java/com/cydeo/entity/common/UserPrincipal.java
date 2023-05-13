@@ -11,7 +11,7 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
 
-    private User user;
+    private User user;   //entity
 
     public UserPrincipal(User user) {
         this.user = user;
@@ -21,8 +21,7 @@ public class UserPrincipal implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         List<GrantedAuthority> authorityList = new ArrayList<>();
-
-        GrantedAuthority authority = new SimpleGrantedAuthority(this.user.getRole().getDescription());
+        GrantedAuthority authority =new SimpleGrantedAuthority(this.user.getRole().getDescription());
 
         authorityList.add(authority);
 
@@ -30,8 +29,8 @@ public class UserPrincipal implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return this.user.getPassWord();   //how i can acccess to password field of the user object
+    public String getPassword() {//get password in the DB and set this for Spring Security user password(mapping)
+        return this.user.getPassWord();//how i can access to password field of the user
     }
 
     @Override
@@ -58,5 +57,4 @@ public class UserPrincipal implements UserDetails {
     public boolean isEnabled() {
         return this.user.isEnabled();
     }
-
 }

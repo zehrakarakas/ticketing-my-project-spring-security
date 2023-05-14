@@ -20,7 +20,7 @@ public class TicketingMyProjectSpringSecurityApplication {
 
         return new ModelMapper();
     }
-    @Bean
+    @Bean //for encoded
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();//it takes password and change to the encoded structure
     }

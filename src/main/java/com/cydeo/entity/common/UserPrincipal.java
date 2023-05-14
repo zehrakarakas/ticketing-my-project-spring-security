@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class UserPrincipal implements UserDetails {
+public class UserPrincipal implements UserDetails {  //Mapper Class user(spring security)---->user(entity)
 
     private User user;   //entity
 
@@ -17,8 +17,10 @@ public class UserPrincipal implements UserDetails {
         this.user = user;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    //in here all method override by spring security we just injectity Entity User and implementation for every each method
+
+    @Override//this override method about role
+    public Collection<? extends GrantedAuthority> getAuthorities() {//GrantedAuthority(interface) spring understand the roles in this
 
         List<GrantedAuthority> authorityList = new ArrayList<>();
         GrantedAuthority authority =new SimpleGrantedAuthority(this.user.getRole().getDescription());

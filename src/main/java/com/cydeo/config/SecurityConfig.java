@@ -32,10 +32,11 @@ public class SecurityConfig {
    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
       return http
               .authorizeRequests()  //whenever we run our security we need to authorize which page
-              .antMatchers("/user/**").hasRole("ADMIN")
-              .antMatchers("/project/**").hasRole("MANAGER")
-              .antMatchers("/task/employee/**").hasRole("EMPLOYEE")
-              .antMatchers("/task/**").hasRole("MANAGER")
+              //.antMatchers("/user/**").hasRole("ADMIN")
+              .antMatchers("/user/**").hasAuthority("Admin") //we use this becouse we need to match db (ROLE_)  hasAuthority not include Role_
+              //.antMatchers("/project/**").hasRole("MANAGER")
+              //.antMatchers("/task/employee/**").hasRole("EMPLOYEE")
+             // .antMatchers("/task/**").hasRole("MANAGER")
               //.antMatchers("/task/**").hasAnyRole("EMPLOYEE","ADMIN")
               //.antMatchers("/task/**").hasAuthority("ROLE_EMPLOYEE")
               .antMatchers(

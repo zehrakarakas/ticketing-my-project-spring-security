@@ -1,23 +1,22 @@
 package com.cydeo.config;
 
+import com.cydeo.service.SecurityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class SecurityConfig {
+
+   private final SecurityService securityService;
+   private final AuthSuccessHandler authSuccessHandler;
+
+   public SecurityConfig(SecurityService securityService, AuthSuccessHandler authSuccessHandler) {
+      this.securityService = securityService;
+      this.authSuccessHandler = authSuccessHandler;
+   }
 //*****HARD CODE WE NEED TO MODIFICATION******
 //   @Bean
 //   public UserDetailsService userDetailsService(PasswordEncoder encoder) {
@@ -49,15 +48,26 @@ public class SecurityConfig {
                       "/assets/**",
                       "/images/**"   //** meaning everything
               ).permitAll()   //make it avaible for everyone
-              .anyRequest().authenticated()  //antMaathchers disindakiler icin
+              .anyRequest().authenticated()  //antMathchers disindakiler icin
               .and()
          //     .httpBasic() //spring give us one pop-up box
               .formLogin()//we create a own login page
                  .loginPage("/login")//representation of my login page //this gonna give us view
-                 .defaultSuccessUrl("/welcome")//login information succesfully done(whenever user authotaticated with correct username and password)
+                 //.defaultSuccessUrl("/welcome")//login information succesfully done(whenever user authotaticated with correct username and password)
+                 .successHandler(authSuccessHandler)//we cant see WELCOME page//create a authSuccessHandler class and modification
                  .failureUrl("/login?error=true")//if user put the wrong information
-                 .permitAll()  //should be accessible for everyone
-              .and().build();
+                 .permitAll() //should be accessible for everyone
+              .and()
+              .logout()
+                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                 .logoutSuccessUrl("/login")
+              .and()
+              .rememberMe()
+                 .tokenValiditySeconds(120)
+                 .key("cydeo")
+                 .userDetailsService(securityService)
+              .and()
+              .build();
 
    }
 

@@ -102,7 +102,7 @@ public class ProjectServiceImpl implements ProjectService {
         //Who login in the system
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        UserDTO currentUserDTO = userService.findByUserName(username);//who login
+        UserDTO currentUserDTO = userService.findByUserName(username);//who login in the application
         //---------we added security part
         //UserDTO currentUserDTO = userService.findByUserName("harold@manager.com");
         User user = userMapper.convertToEntity(currentUserDTO);

@@ -17,7 +17,7 @@ public class SecurityConfig {
       this.securityService = securityService;
       this.authSuccessHandler = authSuccessHandler;
    }
-//*****HARD CODE WE NEED TO MODIFICATION******
+//*****HARD CODE SO, WE NEED TO MODIFICATION******
 //   @Bean
 //   public UserDetailsService userDetailsService(PasswordEncoder encoder) {
 //
@@ -32,7 +32,8 @@ public class SecurityConfig {
       return http
               .authorizeRequests()  //whenever we run our security we need to authorize which page
               //.antMatchers("/user/**").hasRole("ADMIN")
-              .antMatchers("/user/**").hasAuthority("Admin") //we use this becouse we need to match db (ROLE_)  hasAuthority not include Role_
+              //certain role need to certain page
+              .antMatchers("/user/**").hasAuthority("Admin") //admin only able to see "/user/... "pages//we use this because we need to match db (ROLE_)  hasAuthority not include Role_
               .antMatchers("/project/**").hasAuthority("Manager")
               .antMatchers("/task/employee/**").hasAuthority("Employee")//(bildigimiz endpoint burdaki / lar)
               .antMatchers("/task/**").hasAuthority("Manager")//certain role can see certain page (exp:admin only able to see /user pages)
@@ -48,10 +49,10 @@ public class SecurityConfig {
                       "/assets/**",
                       "/images/**"   //** meaning everything
               ).permitAll()   //make it avaible for everyone
-              .anyRequest().authenticated()  //antMathchers disindakiler icin
+              .anyRequest().authenticated()  //antMathchers disindakiler icin authendicate istiyor
               .and()
          //     .httpBasic() //spring give us one pop-up box
-              .formLogin()//we create a own login page
+              .formLogin()//we create an own login page
                  .loginPage("/login")//representation of my login page //this gonna give us view
                  //.defaultSuccessUrl("/welcome")//login information succesfully done(whenever user authotaticated with correct username and password)
                  .successHandler(authSuccessHandler)//we cant see WELCOME page//create a authSuccessHandler class and modification
@@ -59,13 +60,13 @@ public class SecurityConfig {
                  .permitAll() //should be accessible for everyone
               .and()
               .logout()
-                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))//where is the logout button
                  .logoutSuccessUrl("/login")
               .and()
               .rememberMe()
-                 .tokenValiditySeconds(120)
-                 .key("cydeo")
-                 .userDetailsService(securityService)
+                 .tokenValiditySeconds(120)//how long activate
+                 .key("cydeo")//any name
+                 .userDetailsService(securityService)//remember who?
               .and()
               .build();
 

@@ -15,7 +15,7 @@ import java.util.Set;
 public class AuthSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
+        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());//sprig how understand your role when login the application//user can have more then one roles(set kullandik o yuzden)
     //
         if(roles.contains("Admin")){
             response.sendRedirect("/user/create");
